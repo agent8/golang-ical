@@ -404,12 +404,24 @@ func (calendar *Calendar) AddEvent(id string) *VEvent {
 	calendar.Components = append(calendar.Components, e)
 	return e
 }
+
 func (calendar *Calendar) Events() (r []*VEvent) {
 	r = []*VEvent{}
 	for i := range calendar.Components {
 		switch event := calendar.Components[i].(type) {
 		case *VEvent:
 			r = append(r, event)
+		}
+	}
+	return
+}
+
+func (calendar *Calendar) Timezones() (r []*VTimezone) {
+	r = []*VTimezone{}
+	for i := range calendar.Components {
+		switch timezone := calendar.Components[i].(type) {
+		case *VTimezone:
+			r = append(r, timezone)
 		}
 	}
 	return
