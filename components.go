@@ -363,6 +363,36 @@ func (c *VTimezone) serialize(w io.Writer) {
 	c.ComponentBase.serializeThis(w, "VTIMEZONE")
 }
 
+func (c *VTimezone) GetId() string {
+	return ""
+}
+
+func (c *VTimezone) GetUrl() string {
+	return ""
+}
+
+func (c *VTimezone) GetStands() (r []*Standard) {
+	r = []*Standard{}
+	for i := range c.Components {
+		switch standard := c.Components[i].(type) {
+		case *Standard:
+			r = append(r, standard)
+		}
+	}
+	return
+}
+
+func (c *VTimezone) GetDaylights() (r []*Daylight) {
+	r = []*Daylight{}
+	for i := range c.Components {
+		switch daylight := c.Components[i].(type) {
+		case *Daylight:
+			r = append(r, daylight)
+		}
+	}
+	return
+}
+
 type VAlarm struct {
 	ComponentBase
 }
@@ -429,6 +459,22 @@ func (c *Standard) serialize(w io.Writer) {
 	c.ComponentBase.serializeThis(w, "STANDARD")
 }
 
+func (c *Standard) GetDtStart() {
+
+}
+
+func (c *Standard) GetTzOffsetFrom() {
+
+}
+
+func (c *Standard) GetTzOffsetTo() {
+
+}
+
+func (c *Standard) GetRRule() {
+
+}
+
 type Daylight struct {
 	ComponentBase
 }
@@ -441,6 +487,22 @@ func (c *Daylight) Serialize() string {
 
 func (c *Daylight) serialize(w io.Writer) {
 	c.ComponentBase.serializeThis(w, "DAYLIGHT")
+}
+
+func (c *Daylight) GetDtStart() {
+
+}
+
+func (c *Daylight) GetTzOffsetFrom() {
+
+}
+
+func (c *Daylight) GetTzOffsetTo() {
+
+}
+
+func (c *Daylight) GetRRule() {
+
 }
 
 type GeneralComponent struct {
