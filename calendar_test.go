@@ -106,7 +106,7 @@ func TestLineFolding(t *testing.T) {
 			input: "some really long line with spaces to fold on and the line should fold",
 			output: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//arran4//Golang ICS Library
+PRODID:-//agent8//Golang ICS Library
 DESCRIPTION:some really long line with spaces to fold on and the line
   should fold
 END:VCALENDAR
@@ -117,7 +117,7 @@ END:VCALENDAR
 			input: "somereallylonglinewithnospacestofoldonandthelineshouldfoldtothenextline",
 			output: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//arran4//Golang ICS Library
+PRODID:-//agent8//Golang ICS Library
 DESCRIPTION:somereallylonglinewithnospacestofoldonandthelineshouldfoldtothe
  nextline
 END:VCALENDAR
@@ -128,7 +128,7 @@ END:VCALENDAR
 			input: "some really long line with spaces howeverthelastpartofthelineisactuallytoolongtofitonsowehavetofoldpartwaythrough",
 			output: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//arran4//Golang ICS Library
+PRODID:-//agent8//Golang ICS Library
 DESCRIPTION:some really long line with spaces
   howeverthelastpartofthelineisactuallytoolongtofitonsowehavetofoldpartwayt
  hrough
@@ -140,7 +140,7 @@ END:VCALENDAR
 			input: " this line is exactly 75 characters long with the property name",
 			output: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//arran4//Golang ICS Library
+PRODID:-//agent8//Golang ICS Library
 DESCRIPTION: this line is exactly 75 characters long with the property name
 END:VCALENDAR
 `,
@@ -151,7 +151,7 @@ END:VCALENDAR
 			input: "éé界世界世界世界世界世界世界世界世界世界世界世界世界",
 			output: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//arran4//Golang ICS Library
+PRODID:-//agent8//Golang ICS Library
 DESCRIPTION:éé界世界世界世界世界世界世界世界世界世界
  世界世界世界
 END:VCALENDAR
