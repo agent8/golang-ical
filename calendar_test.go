@@ -171,3 +171,72 @@ END:VCALENDAR
 		})
 	}
 }
+
+func TestTimeZone(t *testing.T) {
+	data1 := `
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VTIMEZONE
+TZID:Taipei Standard Time
+BEGIN:STANDARD
+DTSTART:16010101T000000
+TZOFFSETFROM:+0800
+TZOFFSETTO:+0800
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:16010101T000000
+TZOFFSETFROM:+0800
+TZOFFSETTO:+0800
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;TZID=Taipei Standard Time:20211112T000000
+DTEND;TZID=Taipei Standard Time:20211112T010000
+DTEND:20211028T013000Z
+DTSTAMP:20211026T152157Z
+ORGANIZER;CN=bonnie@edison.tech:mailto:bonnie@edison.tech
+UID:69b37lqafm98nr7jvu56f8utv8@google.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE
+ ;CN=myan@yipitdata.com;X-NUM-GUESTS=0:mailto:myan@yipitdata.com
+CREATED:20211025T162806Z
+DESCRIPTION:Here is the video and audio links.
+LAST-MODIFIED:20211026T152153Z
+LOCATION:Zoom info in details // link for English and Tencent link for simu
+ ltaneous Chinese translation.( Audio only)
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Vin x Edison China Team town hall
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
+`
+
+	calendar, _ := ParseCalendar(strings.NewReader(data1))
+	for i := range calendar.Components {
+		switch tz := calendar.Components[i].(type) {
+		case *VTimezone:
+			t.Log(tz)
+		}
+	}
+
+	for _, event := range calendar.Events() {
+		t.Log(event.Id())
+
+		pro := event.GetProperty(ComponentProperty(PropertyDtstart))
+		t.Log(pro)
+
+		param := pro.ICalParameters["TZID"]
+		t.Log(len(param))
+		if len(param) > 0 {
+			t.Log(param[0])
+		}
+
+		value := pro.Value
+		t.Log(value)
+
+		t.Log(event.GetStartAt())
+	}
+}
