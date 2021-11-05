@@ -182,6 +182,7 @@ METHOD:REQUEST
 
 BEGIN:VTIMEZONE
 TZID:Taipei Standard Time
+TZURL:http://timezones.example.org/tz/America-Los_Angeles.ics
 
 BEGIN:STANDARD
 DTSTART:16010101T000000
@@ -199,6 +200,25 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU;UNTIL=20061029T060000Z
 TZNAME:EST
 END:DAYLIGHT
 
+END:VTIMEZONE
+
+
+
+BEGIN:VTIMEZONE
+TZID:America/New_York
+LAST-MODIFIED:20050809T050000Z
+BEGIN:STANDARD
+DTSTART:20071104T020000
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+TZNAME:EST
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:20070311T020000
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+TZNAME:EDT
+END:DAYLIGHT
 END:VTIMEZONE
 
 BEGIN:VEVENT
@@ -235,9 +255,12 @@ END:VCALENDAR
 
 	calendar, _ := ParseCalendar(strings.NewReader(data1))
 	t.Log("calendar:", calendar)
+	t.Log("-------------------")
 
 	for _, timezone := range calendar.Timezones() {
 		t.Log("timezone:", timezone)
+		t.Log("timezone.tzid", timezone.GetId())
+		t.Log("timezone.tzurl", timezone.GetUrl())
 
 		for _, standard := range timezone.GetStands() {
 			t.Log("standard:", standard)
@@ -247,6 +270,8 @@ END:VCALENDAR
 			t.Log("TZOFFSETTO:", standard.GetTzOffsetTo())
 			t.Log("TZNAME:", standard.GetTzName())
 			t.Log("RRULE:", standard.GetRRule())
+
+			t.Log("-------------------")
 		}
 
 		for _, daylight := range timezone.GetDaylights() {
@@ -257,8 +282,19 @@ END:VCALENDAR
 			t.Log("TZOFFSETTO:", daylight.GetTzOffsetTo())
 			t.Log("TZNAME:", daylight.GetTzName())
 			t.Log("RRULE:", daylight.GetRRule())
+
+			t.Log("-------------------")
 		}
+
+		t.Log("-------------------")
 	}
+
+	timezone := calendar.FindTimezone("America/New_York")
+	t.Log("timezone: \"America/New_York\" :", timezone)
+	t.Log("timezone.tzid:", timezone.GetId())
+	t.Log("timezone.tzurl:", timezone.GetUrl())
+
+	t.Log("-------------------")
 
 	for _, event := range calendar.Events() {
 		t.Log("event:", event)
@@ -278,5 +314,8 @@ END:VCALENDAR
 
 		s := pro.Value
 		t.Log("stamp:", s)
+		t.Log("-------------------")
 	}
+
+	t.Log("-------------------")
 }
