@@ -427,6 +427,19 @@ func (calendar *Calendar) Timezones() (r []*VTimezone) {
 	return
 }
 
+func (calendar *Calendar) FindTimezone(tzid string) *VTimezone {
+	for i := range calendar.Components {
+		switch timezone := calendar.Components[i].(type) {
+		case *VTimezone:
+			if timezone.GetId() == tzid {
+				return timezone
+			}
+		}
+	}
+
+	return nil
+}
+
 func ParseCalendar(r io.Reader) (*Calendar, error) {
 	state := "begin"
 	c := &Calendar{}

@@ -375,11 +375,11 @@ func (c *VTimezone) serialize(w io.Writer) {
 }
 
 func (c *VTimezone) GetId() string {
-	return ""
+	return c.GetPropertyValue(PropertyTzid)
 }
 
 func (c *VTimezone) GetUrl() string {
-	return ""
+	return c.GetPropertyValue(PropertyTzurl)
 }
 
 func (c *VTimezone) GetStands() (r []*Standard) {
