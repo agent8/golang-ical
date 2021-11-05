@@ -179,24 +179,31 @@ PRODID:-//Google Inc//Google Calendar 70.9054//EN
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:REQUEST
+
 BEGIN:VTIMEZONE
 TZID:Taipei Standard Time
+
 BEGIN:STANDARD
 DTSTART:16010101T000000
 TZOFFSETFROM:+0800
 TZOFFSETTO:+0800
+RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=-1SU;UNTIL=19730429T070000Z
+TZNAME:EDT
 END:STANDARD
+
 BEGIN:DAYLIGHT
 DTSTART:16010101T000000
 TZOFFSETFROM:+0800
 TZOFFSETTO:+0800
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU;UNTIL=20061029T060000Z
+TZNAME:EST
 END:DAYLIGHT
+
 END:VTIMEZONE
+
 BEGIN:VEVENT
-DTSTART;TZID=Taipei Standard Time:20211112T000000
+DTSTART;tzid=Taipei Standard Time:20211112T000000
 DTEND;TZID=Taipei Standard Time:20211112T010000
-DTEND:20211028T013000Z
-DTSTAMP:20211026T152157Z
 ORGANIZER;CN=bonnie@edison.tech:mailto:bonnie@edison.tech
 UID:69b37lqafm98nr7jvu56f8utv8@google.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE
@@ -211,32 +218,65 @@ STATUS:CONFIRMED
 SUMMARY:Vin x Edison China Team town hall
 TRANSP:OPAQUE
 END:VEVENT
+
+BEGIN:VEVENT
+UID:19970901T130000Z-123403@example.com
+DTSTAMP:19970901T130000Z
+DTSTART;VALUE=DATE:19971102
+SUMMARY:Our Blissful Anniversary
+TRANSP:TRANSPARENT
+CLASS:CONFIDENTIAL
+CATEGORIES:ANNIVERSARY,PERSONAL,SPECIAL OCCASION
+RRULE:FREQ=YEARLY
+END:VEVENT
+
 END:VCALENDAR
 `
 
 	calendar, _ := ParseCalendar(strings.NewReader(data1))
-	for i := range calendar.Components {
-		switch tz := calendar.Components[i].(type) {
-		case *VTimezone:
-			t.Log(tz)
+	t.Log("calendar:", calendar)
+
+	for _, timezone := range calendar.Timezones() {
+		t.Log("timezone:", timezone)
+
+		for _, standard := range timezone.GetStands() {
+			t.Log("standard:", standard)
+
+			t.Log("DTSTART:", standard.GetDtStart())
+			t.Log("TZOFFSETFROM:", standard.GetTzOffsetFrom())
+			t.Log("TZOFFSETTO:", standard.GetTzOffsetTo())
+			t.Log("TZNAME:", standard.GetTzName())
+			t.Log("RRULE:", standard.GetRRule())
+		}
+
+		for _, daylight := range timezone.GetDaylights() {
+			t.Log("daylight:", daylight)
+
+			t.Log("DTSTART:", daylight.GetDtStart())
+			t.Log("TZOFFSETFROM:", daylight.GetTzOffsetFrom())
+			t.Log("TZOFFSETTO:", daylight.GetTzOffsetTo())
+			t.Log("TZNAME:", daylight.GetTzName())
+			t.Log("RRULE:", daylight.GetRRule())
 		}
 	}
 
 	for _, event := range calendar.Events() {
-		t.Log(event.Id())
+		t.Log("event:", event)
 
 		pro := event.GetProperty(ComponentProperty(PropertyDtstart))
-		t.Log(pro)
+		t.Log("PropertyDtstart:", pro)
 
-		param := pro.ICalParameters["TZID"]
-		t.Log(len(param))
-		if len(param) > 0 {
-			t.Log(param[0])
+		tzid := pro.ICalParameters[string(ParameterTzid)]
+		if len(tzid) > 0 {
+			t.Log("tzid:", tzid[0])
 		}
 
-		value := pro.Value
-		t.Log(value)
+		value := pro.ICalParameters[string(ParameterValue)]
+		if len(value) > 0 {
+			t.Log("date-time type:", value[0])
+		}
 
-		t.Log(event.GetStartAt())
+		s := pro.Value
+		t.Log("stamp:", s)
 	}
 }
