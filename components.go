@@ -29,15 +29,26 @@ func (cb *ComponentBase) UnknownPropertiesIANAProperties() []IANAProperty {
 func (cb *ComponentBase) SubComponents() []Component {
 	return cb.Components
 }
-func (base ComponentBase) serializeThis(writer io.Writer, componentType string) {
+
+func (cb ComponentBase) serializeThis(writer io.Writer, componentType string) {
 	fmt.Fprint(writer, "BEGIN:"+componentType, "\r\n")
-	for _, p := range base.Properties {
+	for _, p := range cb.Properties {
 		p.serialize(writer)
 	}
-	for _, c := range base.Components {
+	for _, c := range cb.Components {
 		c.serialize(writer)
 	}
 	fmt.Fprint(writer, "END:"+componentType, "\r\n")
+}
+
+func (cb ComponentBase) GetPropertyValue(property Property) string {
+	for i := range cb.Properties {
+		if cb.Properties[i].IANAToken == string(property) {
+			return cb.Properties[i].Value
+		}
+	}
+
+	return ""
 }
 
 type VEvent struct {
@@ -459,20 +470,24 @@ func (c *Standard) serialize(w io.Writer) {
 	c.ComponentBase.serializeThis(w, "STANDARD")
 }
 
-func (c *Standard) GetDtStart() {
-
+func (c *Standard) GetDtStart() string {
+	return c.GetPropertyValue(PropertyDtstart)
 }
 
-func (c *Standard) GetTzOffsetFrom() {
-
+func (c *Standard) GetTzOffsetFrom() string {
+	return c.GetPropertyValue(PropertyTzoffsetfrom)
 }
 
-func (c *Standard) GetTzOffsetTo() {
-
+func (c *Standard) GetTzOffsetTo() string {
+	return c.GetPropertyValue(PropertyTzoffsetto)
 }
 
-func (c *Standard) GetRRule() {
+func (c *Standard) GetTzName() string {
+	return c.GetPropertyValue(PropertyTzname)
+}
 
+func (c *Standard) GetRRule() string {
+	return c.GetPropertyValue(PropertyRrule)
 }
 
 type Daylight struct {
@@ -489,20 +504,24 @@ func (c *Daylight) serialize(w io.Writer) {
 	c.ComponentBase.serializeThis(w, "DAYLIGHT")
 }
 
-func (c *Daylight) GetDtStart() {
-
+func (c *Daylight) GetDtStart() string {
+	return c.GetPropertyValue(PropertyDtstart)
 }
 
-func (c *Daylight) GetTzOffsetFrom() {
-
+func (c *Daylight) GetTzOffsetFrom() string {
+	return c.GetPropertyValue(PropertyTzoffsetfrom)
 }
 
-func (c *Daylight) GetTzOffsetTo() {
-
+func (c *Daylight) GetTzOffsetTo() string {
+	return c.GetPropertyValue(PropertyTzoffsetto)
 }
 
-func (c *Daylight) GetRRule() {
+func (c *Daylight) GetTzName() string {
+	return c.GetPropertyValue(PropertyTzname)
+}
 
+func (c *Daylight) GetRRule() string {
+	return c.GetPropertyValue(PropertyRrule)
 }
 
 type GeneralComponent struct {
