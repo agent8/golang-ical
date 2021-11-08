@@ -270,6 +270,7 @@ END:VCALENDAR
 			t.Log("TZOFFSETTO:", standard.GetTzOffsetTo())
 			t.Log("TZNAME:", standard.GetTzName())
 			t.Log("RRULE:", standard.GetRRule())
+			t.Log("RDATE:", standard.GetRDate())
 
 			t.Log("-------------------")
 		}
@@ -282,8 +283,20 @@ END:VCALENDAR
 			t.Log("TZOFFSETTO:", daylight.GetTzOffsetTo())
 			t.Log("TZNAME:", daylight.GetTzName())
 			t.Log("RRULE:", daylight.GetRRule())
+			t.Log("RDATE:", daylight.GetRDate())
 
 			t.Log("-------------------")
+		}
+
+		for _, observance := range timezone.GetAllObservances() {
+			t.Log("observance:", observance, "Type", observance.Type)
+
+			t.Log("DTSTART:", observance.GetDtStart())
+			t.Log("TZOFFSETFROM:", observance.GetTzOffsetFrom())
+			t.Log("TZOFFSETTO:", observance.GetTzOffsetTo())
+			t.Log("TZNAME:", observance.GetTzName())
+			t.Log("RRULE:", observance.GetRRule())
+			t.Log("RDATE:", observance.GetRDate())
 		}
 
 		t.Log("-------------------")
