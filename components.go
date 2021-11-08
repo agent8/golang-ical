@@ -503,6 +503,10 @@ func (c *Standard) GetRRule() string {
 	return c.GetPropertyValue(PropertyRrule)
 }
 
+func (c *Standard) GetRDate() string {
+	return c.GetPropertyValue(PropertyRdate)
+}
+
 type Daylight struct {
 	ComponentBase
 }
@@ -535,6 +539,10 @@ func (c *Daylight) GetTzName() string {
 
 func (c *Daylight) GetRRule() string {
 	return c.GetPropertyValue(PropertyRrule)
+}
+
+func (c *Daylight) GetRDate() string {
+	return c.GetPropertyValue(PropertyRdate)
 }
 
 type VTimezoneObservance struct {
