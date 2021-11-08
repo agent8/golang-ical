@@ -404,6 +404,19 @@ func (c *VTimezone) GetDaylights() (r []*Daylight) {
 	return
 }
 
+func (c *VTimezone) GetAllObservances() (r []*VTimezoneObservance) {
+	r = []*VTimezoneObservance{}
+	for i := range c.Components {
+		switch daylight := c.Components[i].(type) {
+		case *Standard:
+			r = append(r, &VTimezoneObservance{daylight.ComponentBase, "Standard"})
+		case *Daylight:
+			r = append(r, &VTimezoneObservance{daylight.ComponentBase, "Daylight"})
+		}
+	}
+	return
+}
+
 type VAlarm struct {
 	ComponentBase
 }
@@ -522,6 +535,39 @@ func (c *Daylight) GetTzName() string {
 
 func (c *Daylight) GetRRule() string {
 	return c.GetPropertyValue(PropertyRrule)
+}
+
+type VTimezoneObservance struct {
+	ComponentBase
+	Type string
+}
+
+func (o *VTimezoneObservance) GetType() string {
+	return o.Type
+}
+
+func (o *VTimezoneObservance) GetDtStart() string {
+	return o.GetPropertyValue(PropertyDtstart)
+}
+
+func (o *VTimezoneObservance) GetTzOffsetFrom() string {
+	return o.GetPropertyValue(PropertyTzoffsetfrom)
+}
+
+func (o *VTimezoneObservance) GetTzOffsetTo() string {
+	return o.GetPropertyValue(PropertyTzoffsetto)
+}
+
+func (o *VTimezoneObservance) GetTzName() string {
+	return o.GetPropertyValue(PropertyTzname)
+}
+
+func (o *VTimezoneObservance) GetRRule() string {
+	return o.GetPropertyValue(PropertyRrule)
+}
+
+func (o *VTimezoneObservance) GetRDate() string {
+	return o.GetPropertyValue(PropertyRdate)
 }
 
 type GeneralComponent struct {
